@@ -791,7 +791,7 @@ function loadDevelopments() {
 // ── Render ─────────────────────────────────────────────────────
 function renderDevs() {
   var grid = document.getElementById('dev-grid');
-  var filtered = activeFilter === 'all' ? allDevs : allDevs.filter(function(d){ return d.category === activeFilter; });
+  var filtered = activeFilter === 'all' ? allDevs : allDevs.filter(function(d){ return d.category && d.category.toLowerCase() === activeFilter.toLowerCase(); });
   if (!filtered.length) {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-light);font-size:0.88rem;">No developments found.</div>';
     return;
@@ -799,7 +799,7 @@ function renderDevs() {
   grid.innerHTML = filtered.map(function(d) {
     var imgUrl   = sanityImageUrl(d.image);
     var imgStyle = imgUrl ? 'background:url(' + imgUrl + ') center/cover no-repeat;' : 'background:linear-gradient(135deg,#031329,#0a2540);';
-    var statusClass = d.status === 'Available' ? 'available' : (d.status === 'Reserved' ? 'limited' : 'new');
+    var statusClass = (d.status||'').toLowerCase() === 'available' ? 'available' : ((d.status||'').toLowerCase() === 'reserved' ? 'limited' : 'new');
     var statusLabel = d.status || 'Available';
     var completion  = d.completionStatus === 'Completed' ? 'Completed' : (d.completionTimeframe || 'Off-Plan');
     var price  = d.price  ? '&pound;' + Number(d.price).toLocaleString('en-GB') : '';
